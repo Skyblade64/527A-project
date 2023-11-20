@@ -24,6 +24,8 @@ filtered.text = text %>%
   ungroup() %>%
   mutate(text = as.factor(text))
 
+# write.csv(filtered.text, "../Data/preprocessed_text.csv", row.names = FALSE)
+
 # Subset the text by group -----------------------------------------------------
 
 black.text <- filtered.text %>% filter(race == 'black')
