@@ -1,8 +1,8 @@
 
-## Messi H.J. Lee, Patrick Farley, Sangwook Suh
+## Messi H.J. Lee
 # Project Milestone
 
-## Script date: 19 Nov 2023
+## Script date: 21 Nov 2023
 
 # Install and/or load packages -------------------------------------------------
 
