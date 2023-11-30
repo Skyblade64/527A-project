@@ -10,7 +10,6 @@ if(!require("tidyverse")){install.packages("tidyverse", dependencies = TRUE); re
 if(!require("ggplot2")){install.packages("ggplot2", dependencies = TRUE); require("ggplot2")}
 if(!require("ggsci")){install.packages("ggsci", dependencies = TRUE); require("ggsci")}
 
-
 # Import classified text -------------------------------------------------------
 
 jobs = read.csv('../Zero-Shot Classification/classified_jobs_21.csv') %>%
