@@ -8,12 +8,14 @@
 
 if(!require("tidyverse")){install.packages("tidyverse", dependencies = TRUE); require("tidyverse")}
 if(!require("ggplot2")){install.packages("ggplot2", dependencies = TRUE); require("ggplot2")}
+if(!require("ggsci")){install.packages("ggsci", dependencies = TRUE); require("ggsci")}
+
 
 # Import classified text -------------------------------------------------------
 
 jobs = read.csv('../Zero-Shot Classification/classified_jobs_21.csv') %>%
-  mutate(text = factor(jobs$text, levels = unique(text))) %>%
-  mutate(industry = factor(jobs$industry, levels = unique(industry)))
+  mutate(text = factor(text, levels = unique(text))) %>%
+  mutate(industry = factor(industry, levels = unique(industry)))
 
 male = jobs %>% filter(gender == 'M')
 female = jobs %>% filter(gender == 'F')
@@ -85,7 +87,8 @@ female.industry.ci = boot_industry(female, 1000)
 proportions_df <- jobs %>%
   group_by(gender, industry) %>%
   summarize(count = n(), .groups = 'drop') %>%
-  mutate(total = sum(count), proportion = count / total)
+  mutate(total = sum(count), proportion = count / total)%>%
+  complete(industry, gender, fill = list(proportion = 0))
 
 ggplot(proportions_df, aes(x = industry, y = proportion, fill = gender)) +
   geom_bar(stat = "identity", position = position_dodge()) +
@@ -94,5 +97,10 @@ ggplot(proportions_df, aes(x = industry, y = proportion, fill = gender)) +
   labs(title = "Proportions Across Industries by Gender",
        x = "Industry",
        y = "Proportion",
-       fill = "Gender")
+       fill = "Gender") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_fill_aaas()
+
+ggsave("../Figures/industry_proportions_by_gender.png", 
+       width = 8, height = 8, dpi = "retina", bg = "white")
 
