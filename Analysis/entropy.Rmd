@@ -1,0 +1,101 @@
+---
+title: "entropy results"
+output: html_notebook
+---
+
+```{r packages, echo = FALSE}
+if(!require("tidyverse")){install.packages("tidyverse", dependencies = TRUE); require("tidyverse")}
+if(!require("ggplot2")){install.packages("ggplot2", dependencies = TRUE); require("ggplot2")}
+if(!require("ggsci")){install.packages("ggsci", dependencies = TRUE); require("ggsci")}
+```
+
+```{r import}
+jobs = read.csv('../Zero-Shot Classification/classified_jobs_21.csv') %>%
+  mutate(text = factor(text, levels = unique(text))) %>%
+  mutate(industry = factor(industry, levels = unique(industry)))
+
+male = jobs %>% filter(gender == 'M')
+female = jobs %>% filter(gender == 'F')
+
+black = jobs %>% filter(race == 'black')
+asian = jobs %>% filter(race == 'asian')
+hispanic = jobs %>% filter(race == 'hispanic')
+white = jobs %>% filter(race == 'white')
+```
+
+```{r boot_text}
+boot_text <- function(data, R, conf.level = 0.05){
+  
+  set.seed(1048596)
+  entropy_list = numeric(R)
+  
+  for (i in c(1:R)){
+    sampled_data <- sample_n(data, nrow(data), replace = TRUE)
+    text_table <- table(sampled_data$text)
+    text_prop <- prop.table(text_table)
+    
+    # Calculate entropy measure using the proportions
+    small_value = .Machine$double.eps # Use some epsilon value to address categories with 0 value 
+    entropy = -sum((text_prop + small_value) * log(text_prop + small_value))
+    entropy_list[i] = entropy
+  }
+  
+  lower.bound = quantile(entropy_list, conf.level/2)
+  upper.bound = quantile(entropy_list, 1 - conf.level/2)
+  estimate = quantile(entropy_list, 0.50)
+  
+  print(c(lower.bound, estimate, upper.bound))
+  return(c(lower.bound, estimate, upper.bound))
+  
+}
+```
+
+```{r gender}
+male.text.ci = boot_text(male, 1000)
+female.text.ci = boot_text(female, 1000)
+```
+
+```{r race}
+black.text.ci = boot_text(black, 1000)
+asian.text.ci = boot_text(asian, 1000)
+hispanic.text.ci = boot_text(hispanic, 1000)
+white.text.ci = boot_text(white, 1000)
+```
+
+```{r boot_industry}
+boot_industry <- function(data, R, conf.level = 0.05){
+  
+  entropy_list = numeric(R)
+  
+  for (i in c(1:R)){
+    sampled_data <- sample_n(data, nrow(data), replace = TRUE)
+    industry_table <- table(sampled_data$industry)
+    industry_prop <- prop.table(industry_table)
+    
+    small_value = .Machine$double.eps
+    entropy = -sum((industry_prop + small_value) * log(industry_prop + small_value))
+    entropy_list[i] = entropy
+  }
+  
+  lower.bound = quantile(entropy_list, conf.level/2)
+  upper.bound = quantile(entropy_list, 1 - conf.level/2)
+  estimate = quantile(entropy_list, 0.50)
+  
+  print(c(lower.bound, estimate, upper.bound))
+  return(c(lower.bound, estimate, upper.bound))
+  
+}
+```
+
+```{r gender_2}
+male.industry.ci = boot_industry(male, 1000)
+female.industry.ci = boot_industry(female, 1000)
+```
+
+```{r race_2}
+black.text.ci = boot_industry(black, 1000)
+asian.text.ci = boot_industry(asian, 1000)
+hispanic.text.ci = boot_industry(hispanic, 1000)
+white.text.ci = boot_industry(white, 1000)
+```
+
