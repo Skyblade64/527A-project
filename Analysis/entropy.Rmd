@@ -36,7 +36,7 @@ boot_text <- function(data, R, conf.level = 0.05){
     
     # Calculate entropy measure using the proportions
     small_value = .Machine$double.eps # Use some epsilon value to address categories with 0 value 
-    entropy = -sum((text_prop + small_value) * log(text_prop + small_value))
+    entropy = -sum((text_prop + small_value) * log(text_prop + small_value, base = 2))
     entropy_list[i] = entropy
   }
   
@@ -73,7 +73,7 @@ boot_industry <- function(data, R, conf.level = 0.05){
     industry_prop <- prop.table(industry_table)
     
     small_value = .Machine$double.eps
-    entropy = -sum((industry_prop + small_value) * log(industry_prop + small_value))
+    entropy = -sum((industry_prop + small_value) * log(industry_prop + small_value, base = 2))
     entropy_list[i] = entropy
   }
   
@@ -93,9 +93,9 @@ female.industry.ci = boot_industry(female, 1000)
 ```
 
 ```{r race_2}
-black.text.ci = boot_industry(black, 1000)
-asian.text.ci = boot_industry(asian, 1000)
-hispanic.text.ci = boot_industry(hispanic, 1000)
-white.text.ci = boot_industry(white, 1000)
+black.industry.ci = boot_industry(black, 1000)
+asian.industry.ci = boot_industry(asian, 1000)
+hispanic.industry.ci = boot_industry(hispanic, 1000)
+white.industry.ci = boot_industry(white, 1000)
 ```
 

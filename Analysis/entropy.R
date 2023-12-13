@@ -32,7 +32,7 @@ boot_text <- function(data, R, conf.level = 0.05){
     
     # Calculate entropy measure using the proportions
     small_value = .Machine$double.eps # Use some epsilon value to address categories with 0 value 
-    entropy = -sum((text_prop + small_value) * log(text_prop + small_value))
+    entropy = -sum((text_prop + small_value) * log(text_prop + small_value, base = 2))
     entropy_list[i] = entropy
   }
   
@@ -63,7 +63,7 @@ boot_industry <- function(data, R, conf.level = 0.05){
     
     # Calculate entropy measure using the proportions
     small_value = .Machine$double.eps # Use some epsilon value to address categories with 0 value 
-    entropy = -sum((industry_prop + small_value) * log(industry_prop + small_value))
+    entropy = -sum((industry_prop + small_value) * log(industry_prop + small_value, base = 2))
     entropy_list[i] = entropy
   }
   
